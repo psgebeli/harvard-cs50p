@@ -1,12 +1,9 @@
 
-# Ask user for their name
-# Remove whitespace from str by using strip() method and 
-# capitalize using title() method (first letter of each word)
+def main():
+    name = input("What's your name? ")
+    hello(name)
 
-name = input('What\'s your name? ').strip().title()
+def hello(to="world"):
+    print("hello,", to)
 
-# Say hello to user
-print(f"hello, {name}")
-
-# Python official documentation for print function
-# print(*objects, sep=' ', end='\n', file=sys.stdout, flush=False)
+main()
