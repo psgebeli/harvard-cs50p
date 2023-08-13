@@ -9,7 +9,7 @@ def main():
     # Prompt the user
     print("This is a safe space. Say whatever you want to say.")
 
-    # Store input as a string
+    # Store input as a strings
     string_initial = input()
 
     # Print the result of the cleaning
