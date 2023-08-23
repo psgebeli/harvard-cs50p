@@ -41,6 +41,7 @@ def main():
     
     # Prompt user for their vanity plate name 
     plate = input("Plate: ")
+
     # Call is_valid function to determine if it meets MS vanity plate requirements, and print whether it does or does not
     if is_valid(plate):
         print("Valid")
@@ -50,22 +51,105 @@ def main():
 
 def is_valid(s):
 
-    # Initialize a number that will have 1 added to it for each criteria passed
-    score = 0
+    '''
+    Funct to determine if an inputted plate number is valid. The logic is to check if the plate
+    satisfies each of the 4 rules. But, if it fails any rule, it is automatically invalid 
+    and doesn't require the subsequent rule checks, so false is returned.
 
-    score += 1 if s[0].isalpha() == s[1].isalpha() == True else 0 
+    String methods used in this code:
 
-    score += 1 if 2 <= len(s) <= 6 else 0
+    string.isalpha(): return True if string consists of only letters
+    string.isnumeric(): return True if string consists of only numbers
+    string.isalnum(): return True if string is alphanumeric, AKA contains nothing besides letters and numbers
+    string.startswith(x): return True if string starts with x (x can be anything)
 
-    score += 1 if numbers_correct(s) else 0
+    '''
 
-    score += 1 if s.alnum() else 0
+    # Rule 1: Between 2 and 6 characters
+    if not 2 <= len(s) <= 6:
+        return False
+    
+    # Rule 2: First two characters must be letters
+    if not s[0].isalpha() == s[1].isalpha() == True:
+        return False
+    
+    # Rule 3: Numbers cant be in the middle (call to custom function)
+    if not numbers_correct(s):
+        return False
+    
+    # Rule 4: No punctuation 
+    if not s.isalnum():
+        return False
 
-    return True if score == 4 else False
+    # If it got through all of the checks, its valid, so return True
+    return True
 
 def numbers_correct(s):
+    
+    # The numbers follow the numeric rules if they dont start with a 0 and dont have middle numbers (call to below functions)
+    return True if not starts_with_zero(s) and not middle_numbers(s) else False
 
-    ???
+def starts_with_zero(s):
+
+    # Function to determine if a sequence of numbers from the input starts with a zero
+
+    # Initialize an empty string, to be populated with the numbers in the input
+    numbers = ''
+
+    # For loop to populate numbers string with all of the numbers from the input (ignore first 2 characters since they must be letters)
+    for i in range(2, len(s)):
+
+        # Add the character to the numbers string if its a number, otherwise add empty string
+        numbers += s[i] if s[i].isnumeric() else ''
+
+    # Starts_with_zero is True if numbers string starts with a 0, otherwise its false
+    return True if numbers.startswith('0') else False 
+
+def middle_numbers(s):
+
+    # Function to determine if there are any letters between numbers
+
+    # Call to function to determine the amount of numbers in the input
+    numbers_present = amount_of_numbers(s)
+
+    # For each index beyond the first two (but not the last one since we are considering the subsequent element) 
+    for j in range(2, len(s)-1):
+
+        # if the jth character is a number but the subsequent element is a letter
+        if s[j].isnumeric() and s[j+1].isalpha():
+
+            # Then there are middle numbers
+            return True 
+        
+    # If the last element is a number and its preceding character is a letter, AND there is more than one number
+    if s[len(s)-1].isnumeric() and s[len(s)-2].isalpha() and numbers_present > 1:
+
+        # Then there are middle numbers
+        return True
+    
+    # Return false if the string passed all of this function's criteria, since that means there are no middle numbers
+    return False 
+
+def amount_of_numbers(s):
+
+    # Function to return the amount of numbers in the input, mainly used for the function middle_letters
+
+    # Initialize an empty string and the amount of numbers
+    numbers = ''
+    amount_of_numbers = 0 
+
+    # For each character in the string, add 1 to amount_of_numbers if its a number, otherwise add 0
+    for char in s:
+        amount_of_numbers += 1 if char.isnumeric() else 0
+    return amount_of_numbers
+
+            
+
+
+
+
+    
+            
 
 
             
