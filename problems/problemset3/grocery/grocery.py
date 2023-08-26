@@ -39,19 +39,24 @@ def main():
             else:
                 grocery_list[item] += 1
         
-        # Break out of the loop if the user inputs CTRL+D (EOF)
+        # Break out of the loop if the user inputs CTRL+D (EOF) or CTRL+X+C (Keyboard Interrupt)
         except EOFError:
             break
+        except KeyboardInterrupt:
+            break
+    
     
     # Alphabetize the items by making a list of the existing keys in grocery list,
-    # then using the list sort() method to return an alphabetized list
-    alphabetized_items = list(grocery_list.keys()).sort()
+    # then using the list sort() method to alphabetize the list
+    alphabetized_items = list(grocery_list.keys())
+    alphabetized_items.sort()
 
     # Make the alphabetized list into a dictionary with key/value pairs
     # item : value, for each item in alphabetized items, where the value is 
-    # the value that was associated with that item in the original dictionary.
+    # the value that was associated with that key in the original dictionary.
     alphabetized_dict = {i: grocery_list[i] for i in alphabetized_items}
 
+    # Print the number of times item has been entered, followed by the item
     for item in alphabetized_dict:
         print(f"{alphabetized_dict[item]} {item}")
 
