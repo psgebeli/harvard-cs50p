@@ -21,27 +21,28 @@ If, though, X or Y is not an integer, X is greater than Y, or Y is 0, instead pr
 
 def main():
 
+    # While loop to continue prompting the user until their input passes criteria
     while True:
-        try: 
-            str_list = input("Fraction: ").split('/')
-            x, y = int(str_list[0]), int(str_list[1])
-            percent = find_percent_fuel(x,y)
-        except ValueError or y == 0 or x > y:
-            pass
-        print(percent)
-        break
-    
-    
-            
-
-def find_percent_fuel(n,m):
-
-    percent = n / m * 100 
-    if 0 <= percent <= 1:
-        return 'E'
-    elif 99 <= percent <= 100:
-        return 'F'
-    else:
-        return f'{percent}%'
+        try:
+            # split input into two components, then convert to integers and calculate fuel fraction (to nearest int)
+            x, y = input('Fraction: ').split('/') 
+            n, m = int(x), int(y)
+            fuel = round(n / m * 100) # round the percent to the nearest int
+            if 0 <= fuel <= 1: # empty, print such and break loop
+                print('E')
+                break
+            elif 99 <= fuel <= 100: # full, print such and break loop
+                print('F')
+                break
+            elif n > m:
+                print('The numerator must be greater than the denominator.')
+                continue
+            else:
+                print(f'{fuel}%') # print percentage of tank full and break loop
+                break
+        except ZeroDivisionError: # exceptions
+            print('The denominator cannot be zero.')
+        except ValueError:
+            print('The numerator and denominator must be integers.')
 
 main()
