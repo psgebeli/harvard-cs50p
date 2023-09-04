@@ -21,39 +21,66 @@ Prompts the user to guess that integer. If the guess is not a positive integer, 
 
 '''
 
-from random import randint
+from random import randint 
+
 def main():
 
-    level = get_level()
-    check_guess(level)
+    # Define a string since it will be printed a lot.
+    error = "Please input a positive integer."
 
+    # Loop to continue prompting for a valid level.
+    while True:
 
+        # Try to store the inputted level as an integer
+        try:
+            level = int(input("Level: "))
 
-def get_level():
+            # If the level is out of range, print the error and continue the loop. If its within range, break the loop.
+            if level <= 0:
+                print(error)
+            else:
+                break
+        
+        # Except if there is a value error (non-integer inputted), then print the error and continue the loop.
+        except ValueError:
+            print(error)
     
+    # Generate a random int between 1 and the level (randint function is inclusive)
+    random_int = randint(1, level)
+
+    # While loop to continue running until the guess matches the level
     while True:
-        level = int(input("Level: "))
-        integer = randint(1, level)
-        check_guess(integer)
-        if level >= 0:
-            break
-        else:
-            pass
 
-def check_guess(n):
+        # Try to store the inputted guess as an integer
+        try:
+            guess = int(input("Guess: "))
 
-    m = randint(1, n)
+            # If the guess is correct (via call to function), print just right and break the loop.
+            if compare(guess, random_int) == "Just right!":
+                print("Just right!")
+                break
 
-    while True:
-        guess = int(input("Guess: "))
-        if guess < m:
-            print("Too small!")
-        elif guess > m:
-            print("Too big!")
-        else:
-            print("Just right!")
-            break
-
+            # Else if the guess is outside of range (greater than level), print an error msg and continue loop.
+            elif guess > level:
+                print("Ensure your guess is within the level range.")
+            
+            # Otherwise (if the guess is a valid int), print the return value of compare() funct and continue loop 
+            else:
+                print(compare(guess, random_int))
+        
+        # Except if theres a value error, print the error 
+        except ValueError:
+            print(error)
+        
+# Function to compare two integers
+def compare(n, m):
+    if n > m:
+        return "Too large!"
+    elif n < m:
+        return "Too small!"
+    else:
+        return "Just right!"
+    
+# Call to main if this is the file being executed
 if __name__ == '__main__':
     main()
-
