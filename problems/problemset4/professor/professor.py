@@ -46,61 +46,94 @@ if __name__ == "__main__":
 
 from random import randint 
 
-def main():
-    ...
-
+# Function to get the level from the user
 def get_level():
 
+    # Continue prompting for valid input until valid input is rexeived
     while True:
+
+        # Store input as var
         level = input("Level: ")
+
+        # If the level is 1, 2, or 3, break the loop. Otherwise, print error and restart.
         if level in ['1', '2', '3']:
             break
         else:
             print("Level outside of expected range")
     
-    return level 
+    # Return the level as an integer
+    return int(level)
 
+# Function to create a random integer with level digits
 def generate_integer(n):
 
+    # Match statement to use different ranges of randint() depending on n 
     match n:
-        case '1':
+
+        # If n is 1, randint from 0 to 9 inclusive
+        case 1:
             random_int = randint(0, 9)
-        case '2':
+        # Similarly
+        case 2:
             random_int = randint(10, 99)
-        case '3':
+        case 3:
             random_int = randint(100, 999)
+
+        # Otherwise raise a value error
         case _:
             raise ValueError("Available levels are 1, 2, and 3.")
+    
+    # Return the int
     return random_int
 
 def main():
 
-    # Pseudo code 
-
-    # Get level 
-    # Print the first problem with two calls to random.
-        # Prompt input 
-        # if input is correct, print the next problem 
-        # if input is incorrect and num_tries <= 3, print 'EEE'
-        # if input is incorrect and num_tries = 3, print result and next problem 
-
+    # Get the level
     level = get_level()
 
+    # Define problems as an empty dictionary
     problems = {}
 
-    num_tries = 0
+    # Initialize the number of correct answers
+    num_correct = 0
 
+    # For i = 1, 2, ..., 10
     for i in range(1, 11):
+
+        # Initialize number of tries to zero inside the loop (so it resets for each answer)
+        num_tries = 0
+
+        # Generate two randints based on level and store as x, y
         x, y = generate_integer(level), generate_integer(level)
+
+        # Create key value pair {i: problem}, where problem is the two randints on this iteration
         problems[i] = f"{x} + {y} = "
+
+        # While the number of tries is not 3
         while num_tries != 3:
-            guess = input(problems[i])
+
+            # Prompt the user with a problem and store their guess as an int
+            guess = int(input(problems[i]))
+
+            # If the guess is correct, break the while loop 
             if guess == x + y:
+                num_correct += 1
                 break
+
+            # If the guess is incorrect, iterate number of tries and print EEE
             else:
-                pass
-        
+                num_tries += 1
+                print("EEE")
+
+        # If the number of tries is 3, print the solution
+        if num_tries == 3:
+            print(problems[i], x + y)
+
+        # Iterate i, moving onto the next problem 
         i += 1
+
+    # After the for loop, print the score
+    print(f"Score: {num_correct}")
 
 if __name__ == '__main__':
     main()
