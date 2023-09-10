@@ -1,5 +1,4 @@
 # Paul Gebeline, Problem Set 3 
-
 '''
 
 INSTRUCTIONS
@@ -17,7 +16,7 @@ If, though, X or Y is not an integer, X is greater than Y, or Y is 0, instead pr
 (It is not necessary for Y to be 4.) Be sure to catch any exceptions like ValueError or ZeroDivisionError.
 
 
-'''
+ '''
 
 def main():
 
