@@ -52,56 +52,72 @@ import sys
 
 def main():
     
+    # Prompt user for input, then print the result of convert() funct.
     time_range = input("When do you work? ")
     print(convert(time_range))
 
 
 def convert(s):
 
-    if matches := re.search(r"(\d\d?)(:\d\d)?\s(AM|PM)\sto\s(\d\d?)(:\d\d)?\s(AM|PM)", s):
+    # If matches can be assigned to the return values of re.search, where the regex 
+    # picks out a string of the form Hh:mm AM/PM to Hh:mm AM/PM, where uppercase -> required, lowercase -> optional
+    if matches := re.search(r"(\d\d?)(:\d\d)?\s(AM|PM)(\sto\s)(\d\d?)(:\d\d)?\s(AM|PM)", s):
 
+        # Then store the hours of beginning/end of shift on 12 hr scale, as well as the AMs or PMs 
+        # Hours as ints as they will be used to convert to 24 hr scale
+        start_hour_12, start_meridiem = int(matches.group(1)), matches.group(3)
+        stop_hour_12, stop_meridiem = int(matches.group(5)), matches.group(7)
 
-        start_hour, start_meridiem = int(matches.group(1)), matches.group(3)
-        stop_hour, stop_meridiem = int(matches.group(4)), matches.group(6)
+        # Store the minutes as the return value minus the :, or '00' if there are no minutes entered
+        start_minutes = matches.group(2).replace(':', '') if matches.group(2) else '00'
+        stop_minutes = matches.group(6).replace(':', '') if matches.group(6) else '00'
 
-        start_minutes = int(matches.group(2).replace(':', '')) if matches.group(2) else 0
-        stop_minutes = int(matches.group(5).replace(':', '')) if matches.group(5) else 0
+        # Error checking for minutes or hours outside of expected range
+        if not 0 <= int(start_minutes) < 60 or not 0 <= int(stop_minutes) < 60:
+            raise ValueError("Invalid minutes")
+        elif not 1 <= start_hour_12 <= 12 or not 1 <= stop_hour_12 <= 12:
+            raise ValueError("Invalid hour")
+        else: 
+            pass
 
-        start_decimal = start_hour + start_minutes / 60 if start_minutes else start_hour
-        stop_decimal = stop_hour + stop_minutes / 60 if stop_minutes else stop_hour
-
+        # If the meridiem is AM, hour in 24 scale is 0 if hour is 12, otherwise its the same
         match start_meridiem:
             case 'AM':
-                if 12.0 <= start_decimal < 13.0:
-                    start24 = start_decimal - 12.0
+                if start_hour_12 == 12:
+                    start_hour_24 = 0
                 else:
-                    start24 = start_decimal
+                    start_hour_24 = start_hour_12
+        # If it is PM, then the hour gets 12 added unless the hour is 0 or 12 (then its the same)
             case 'PM':
-                if 1.0 <= start_decimal < 12.0:
-                    start24 = start_decimal + 12.0
+                if 1.0 <= start_hour_12 < 12.0:
+                    start_hour_24 = start_hour_12 + 12.0
                 else:
-                    start24 = start_decimal
+                    start24 = start_hour_12
         
+        # Similarly for stopping time 
         match stop_meridiem:
             case 'AM':
-                if 12.0 <= stop_decimal < 13.0:
-                    stop24 = stop_decimal - 12.0
+                if stop_hour_12 == 12:
+                    stop_hour_24 = 0
                 else:
-                    stop24 = stop_decimal
+                    stop_hour_24 = stop_hour_12
             case 'PM':
-                if 1.0 <= stop_decimal < 12.0:
-                    stop24 = stop_decimal + 12.0
+                if 1.0 <= stop_hour_12 < 12.0:
+                    stop_hour_24 = stop_hour_12 + 12.0
                 else:
-                    stop24 = stop_decimal
+                    stop_hour_24 = stop_hour_12
 
+        # Round hour to nearest int (gets rid of decimal) and store it as a string, then fill to the left with 0s until there are 2 digits
+        # e.g 7.zfill(2) = 07
+        start_hour_24 = str(round(start_hour_24)).zfill(2)
+        stop_hour_24 = str(round(stop_hour_24)).zfill(2)
 
-        # Format the time with a colon between hours and minutes
-        start24_str = f'{int(start24):02}:{int((start24 % 1) * 60):02}'
-        stop24_str = f'{int(stop24):02}:{int((stop24 % 1) * 60):02}'
+        # Return the string in the 24 hour format (minutes unchanged)
+        return f'{start_hour_24}:{start_minutes} to {stop_hour_24}:{stop_minutes}'
 
-        return f'{start24_str} to {stop24_str}'
+    # Otherwise, if the regex doesnt have return values, raise a valueerror
     else:
-        raise ValueError("invalid input")
+        raise ValueError('Invalid input')
         
         
 if __name__ == '__main__':
