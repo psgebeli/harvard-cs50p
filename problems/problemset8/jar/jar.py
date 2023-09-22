@@ -104,8 +104,6 @@ class Jar:
         # If there are negative cookies after the withdrawal, raise a value error
         if self.size < 0:
             raise ValueError('You desire more cookies than the Jar possesses, oh greedy one.')
-        
-        s
 
     # Getter for capacity
     @property
@@ -131,7 +129,8 @@ class Jar:
 def test():
 
     jar = Jar(capacity = 10)
-    jar.deposit(3)
+    jar.deposit(4)
+    jar.withdraw(3)
     print(jar)
 
 test()

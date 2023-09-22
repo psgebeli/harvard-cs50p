@@ -28,4 +28,10 @@ def test_str():
     jar.deposit(2)
     assert jar.__str__() == '🍪🍪🍪🍪🍪'
 
+def test_errs():
+        
+    jar = Jar()
+    jar.deposit(3)
+    with pytest.raises(ValueError):
+        jar.withdraw(4)
 
