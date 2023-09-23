@@ -26,13 +26,13 @@ No need to submit any PDFs with your code. But, if you would like, youre welcome
 '''
 
 # Preamble 
-from fdpf2 import FPDF
+from fpdf import FPDF, Align, YPos
 
 def main():
     setup_pdf(get_name())
 
 def get_name():
-    return input('Name: ')
+    return f'{input("Name: ")} took CS50'
 
 def setup_pdf(s):
     
@@ -41,18 +41,22 @@ def setup_pdf(s):
     pdf.add_page()
 
     # Set the font and color (black).
-    pdf.set_font('ZapfDingbats')
+    pdf.set_font('Helvetica', size = 40)
     pdf.set_text_color(r = 0, g = 0, b = 0)
 
     # Add text.
-    pdf.cell(txt = 'CS50 Shirtificate', align = 'C', center = True)
+    pdf.cell(txt = 'CS50 Shirtificate', align = Align.C, center = True, new_y = YPos.NEXT)
 
-    # Add image.
-    pdf.image('shirtificate.png')
+    # Add image aligned horizontally and at y = 30, shifted down from the previous text cell
+    pdf.image('shirtificate.png', w = pdf.epw, x = Align.C, y = 30)
 
     # Change text params and add users name
-    pdf.set_text_color(r = 255, g = 255, b = 255)
-    pdf.cell(txt = s, align = 'C', center = True)
+    # -------------------------------------
+    pdf.set_text_color(r = 255, g = 255, b = 255) # White
+    pdf.set_fill_color(192, 192, 192) # Grey fill for text box
+    pdf.set_font_size(25) # Decrease font size 
+    pdf.set_y(y = pdf.eph / 4) # Set y position of the text cell to 1/4 of the page's height
+    pdf.cell(txt = s, align = Align.C, center = True)
 
     # Set output
     pdf.output('shirtificate.pdf')
